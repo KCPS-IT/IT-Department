@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KCPS IT Department Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0ff1ce;
+            --secondary: #1a1a2e;
+            --accent: #232946;
+            --glass: rgba(255,255,255,0.15);
+            --card-bg: rgba(44,62,80,0.85);
+            --text: #eaeaea;
+            --shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+            --border: 1px solid rgba(255,255,255,0.18);
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', Arial, sans-serif;
+            background: linear-gradient(120deg, #232946 0%, #0ff1ce 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 260px;
+            background: var(--accent);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem 1rem 1rem;
+            position: fixed;
+            height: 100vh;
+            z-index: 10;
+            border-right: var(--border);
+        }
+        .sidebar h1 {
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 8px #0ff1ce44;
+        }
+        .nav-links {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            background: var(--glass);
+            border: var(--border);
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .nav-link.active, .nav-link:hover {
+            background: linear-gradient(90deg, var(--primary) 0%, #232946 100%);
+            color: #232946;
+            transform: translateX(8px) scale(1.05);
+            box-shadow: 0 2px 12px #0ff1ce33;
+        }
+        .main-content {
+            margin-left: 280px;
+            width: calc(100vw - 280px);
+            padding: 3rem 2rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            background: linear-gradient(120deg, #0ff1ce11 0%, #232946 100%);
+            min-height: 100vh;
+            transition: background 0.5s;
+        }
+        .tab-section {
+            display: none;
+            animation: fadeInTab 0.7s;
+        }
+        .tab-section.active {
+            display: block;
+        }
+        @keyframes fadeInTab {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            border: var(--border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(8px);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            /* Remove transform and box-shadow on hover to prevent bounce */
+        }
+        .card h2, .card h3 {
+            font-family: 'Orbitron', Arial, sans-serif;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+        .news-list, .team-list, .download-list, .tutorial-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .news-item, .team-member, .download-item, .tutorial-item {
+            background: var(--glass);
+            border-radius: 14px;
+            border: var(--border);
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px #0ff1ce22;
+            transition: background 0.2s, transform 0.2s;
+            color: var(--text);
+        }
+        .news-item:hover, .team-member:hover, .download-item:hover, .tutorial-item:hover {
+            background: #0ff1ce22;
+            /* Remove transform to prevent bounce */
+        }
+        .news-item h3 a {
+            color: var(--primary);
+            text-decoration: none;
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+        .news-item h3 a:hover {
+            color: #fff;
+            text-shadow: 0 2px 8px #0ff1ce99;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: var(--border);
+            background: var(--glass);
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            outline: none;
+            box-shadow: 0 2px 8px #0ff1ce11;
+            transition: background 0.2s, color 0.2s;
+        }
+        .search-bar:focus {
+            background: #0ff1ce22;
+            color: #232946;
+        }
+        @media (max-width: 900px) {
+            .sidebar { width: 70px; padding: 1rem 0.5rem; }
+            .sidebar h1 { font-size: 1.1rem; margin-bottom: 1rem; }
+            .nav-link { font-size: 0.9rem; padding: 0.6rem 0.5rem; }
+            .main-content { margin-left: 90px; width: calc(100vw - 90px); padding: 2rem 0.5rem; }
+        }
+        @media (max-width: 600px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; width: 100vw; padding: 1rem 0.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <h1>KCPS IT</h1>
+        <nav class="nav-links">
+            <a class="nav-link active" href="#home" onclick="showTab(event, 'home')">🏠 Home</a>
+            <a class="nav-link" href="#news" onclick="showTab(event, 'news')">📰 News</a>
+            <a class="nav-link" href="#information" onclick="showTab(event, 'information')">👥 Information</a>
+            <a class="nav-link" href="#downloads" onclick="showTab(event, 'downloads')">⬇️ Downloads</a>
+            <a class="nav-link" href="#tutorials" onclick="showTab(event, 'tutorials')">🎓 Tutorials</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <section id="home" class="tab-section active">
+            <div class="card">
+                <h2>Welcome to the KCPS IT Department Portal</h2>
+                <p>Discover the latest updates, news, and events from the KCPS IT Department. Our portal provides comprehensive information about our team, contact details, and resources to help you manage and set up your devices. Explore our sections for downloads and tutorials to enhance your experience. For assistance or to suggest new features, please contact Jayden Brooks at <a href="mailto:jbrooks2@kcpublicschools.org" style="color:var(--primary);text-decoration:underline;">jbrooks2@kcpublicschools.org</a>.</p>
+            </div>
+            <div class="news-list">
+                <div class="news-item">
+                    <h3><a href="#news" onclick="showTab(event, 'news')">Latest News</a></h3>
+                    <p>Check out the latest updates and news from the IT Department.</p>
+                </div>
+                <div class="download-item">
+                    <h3><a href="#downloads" onclick="showTab(event, 'downloads')">Downloads</a></h3>
+                    <p>Access our SharePoint site for all available documents.</p>
+                </div>
+                <div class="tutorial-item">
+                    <h3><a href="#tutorials" onclick="showTab(event, 'tutorials')">Tutorials</a></h3>
+                    <p>Learn how to manage and maintain your devices with our tutorials.</p>
+                </div>
+                <div class="team-member">
+                    <h3><a href="#information" onclick="showTab(event, 'information')">Information</a></h3>
+                    <p>Meet the IT Department team and find contact information.</p>
+                </div>
+            </div>
+        </section>
+        <section id="news" class="tab-section">
+            <div class="card">
+                <h2>Latest News</h2>
+                <div class="news-list">
+                    <div class="news-item">
+                        <h3><a href="https://kcps-it.github.io/KCPS-MacOS-Login-Message" target="_blank">New MacOS Login Window</a></h3>
+                        <p>Posted on: March 16, 2024</p>
+                        <p>We've introduced a new MacOS login window to enhance security and user experience...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="information" class="tab-section">
+            <div class="card">
+                <h2>IT Department Team</h2>
+                <input type="search" class="search-bar" placeholder="Search by name or email..." oninput="filterTeamMembers(this.value)">
+                <div class="team-list" id="teamGrid">
+                    <div class="team-member"><h3>Scott Jones</h3><p>CHIEF TECHNOLOGY OFFICER</p><p><a href="mailto:sjones@kcpublicschools.org">sjones@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Anthony Roberts</h3><p>ASST DIR OF TECHNOLOGY \ ENTERPRISE OPS</p><p><a href="mailto:aroberts@kcpublicschools.org">aroberts@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Jeff Hearrell</h3><p>ASST DIR OF TECHNOLOGY \ ENTERPRISE OPS</p><p><a href="mailto:jhearrell@kcpublicschools.org">jhearrell@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Cindy Jackson</h3><p>TECHNOLOGY SUPPORT MANAGER</p><p><a href="mailto:cjackson@kcpublicschools.org">cjackson@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Renae Carter</h3><p>EDUCATIONAL TECHNOLOGY OPERATIONS MGR</p><p><a href="mailto:rcarter@kcpublicschools.org">rcarter@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Melinda Shoemaker</h3><p>ASST DIRECTOR OF EDUCATIONAL TECHNOLOGY</p><p><a href="mailto:mshoemaker@kcpublicschools.org">mshoemaker@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Jeff Keltner</h3><p>SYSTEMS ENGINEER II</p><p><a href="mailto:jkeltner@kcpublicschools.org">jkeltner@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Chidi Nwachukwu</h3><p>NETWORK ENGINEER II</p><p><a href="mailto:cnwachuk@kcpublicschools.org">cnwachuk@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>John Solomon</h3><p>NETWORK ENGINEER II</p><p><a href="mailto:jsolomon@kcpublicschools.org">jsolomon@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Jayden Brooks</h3><p>SYSTEMS ENGINEER I</p><p><a href="mailto:jbrooks2@kcpublicschools.org">jbrooks2@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Travis Willis</h3><p>INFORMATION SECURITY ANALYST</p><p><a href="mailto:twillis@kcpublicschools.org">twillis@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Nathaniel Jones</h3><p>SECURITY ENGINEER</p><p><a href="mailto:njones2@kcpublicschools.org">njones2@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Marlon Andrews</h3><p>DISTRICT INTEGRATED SECURITY SYS MGR</p><p><a href="mailto:mandrews@kcpublicschools.org">mandrews@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Christopher Singleton</h3><p>LEAD SYSTEMS ANALYST DEVELOPER</p><p><a href="mailto:csingleton2@kcpublicschools.org">csingleton2@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Connie Aiello</h3><p>LEAD TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:caiello@kcpublicschools.org">caiello@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Clinton Noland</h3><p>LEAD TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:cnoland2@kcpublicschools.org">cnoland2@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Kyle Babb</h3><p>LEAD AUDIO-VISUAL SPECIALIST</p><p><a href="mailto:kbabb@kcpublicschools.org">kbabb@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Victoria Bleyenberg</h3><p>AUDIO-VISUAL SPECIALIST</p><p><a href="mailto:vbleyenberg@kcpublicschools.org">vbleyenberg@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Janice McKinney</h3><p>MANAGER OF STUDENT INFORMATION SYSTEMS</p><p><a href="mailto:jmckinney@kcpublicschools.org">jmckinney@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Valencia Griswold</h3><p>ED TECH LOGISTICS MANAGER</p><p><a href="mailto:vgriswold@kcpublicschools.org">vgriswold@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Srenda Green</h3><p>PROJECT ASSISTANT</p><p><a href="mailto:sgreen@kcpublicschools.org">sgreen@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Tanya Ellis</h3><p>Educational Technology Ops Spec</p><p><a href="mailto:tellis@kcpublicschools.org">tellis@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Cody Linn</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:colinn@kcpublicschools.org">colinn@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Kevin Jones</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:kjones@kcpublicschools.org">kjones@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Michael Paul Jr.</h3><p>TECHNOLOGY SUPPORT SPECIALIST II</p><p><a href="mailto:mpaul@kcpublicschools.org">mpaul@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Yusef Yadullah</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:yyadullah@kcpublicschools.org">yyadullah@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Lake Hall</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:lhall@kcpublicschools.org">lhall@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Michael Presko</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:mpresko@kcpublicschools.org">mpresko@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Carla Crawford</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:ccrawford@kcpublicschools.org">ccrawford@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Bill Thornton</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:bthornton2@kcpublicschools.org">bthornton2@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Iraj Nomani</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:inomani1@kcpublicschools.org">inomani1@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Doug Mason</h3><p>ENTERPRISE OPERATIONS ANALYST</p><p><a href="mailto:dmason@kcpublicschools.org">dmason@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Dylan Lock</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:dlock@kcpublicschools.org">dlock@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Joseph Carter</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:jcarter2@kcpublicschools.org">jcarter2@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Evely Gonzalez Alvarez</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:egonzalezalvarez@kcpublicschools.org">egonzalezalvarez@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Anthony Bell NDS</h3><p>KCPS -Department of Technology</p><p><a href="mailto:abell3@kcpublicschools.org">abell3@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Adam Garcia</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:agarcia@kcpublicschools.org">agarcia@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Jirapat Kuengwong</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:jkuengwong@kcpublicschools.org">jkuengwong@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Dereje Tolossa</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:dtolossa@kcpublicschools.org">dtolossa@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Stephen Battle</h3><p>DAY CUSTODIAN FULL TIME</p><p><a href="mailto:rbattle@kcpublicschools.org">rbattle@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Wyatt Joseph</h3><p>ENTERPRISE APPLICATIONS ANALYST</p><p><a href="mailto:wjoseph@kcpublicschools.org">wjoseph@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Victoria Martinez</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:vmartinez@kcpublicschools.org">vmartinez@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Howard Chase</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:hchase1@kcpublicschools.org">hchase1@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Paul Truss</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:ptruss@kcpublicschools.org">ptruss@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Anthony Draper</h3><p>ENTERPRISE OPERATIONS ANALYST</p><p><a href="mailto:adraper@kcpublicschools.org">adraper@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Ricky Blount</h3><p>ENTERPRISE OPERATIONS ANALYST</p><p><a href="mailto:rblount@kcpublicschools.org">rblount@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Keenan Williams</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:kwilliams5@kcpublicschools.org">kwilliams5@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Mark Herrada</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:mherrada2@kcpublicschools.org">mherrada2@kcpublicschools.org</a></p></div>
+                    <div class="team-member"><h3>Julian Mobley</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:jmobley@kcpublicschools.org">jmobley@kcpublicschools.org</a></p></div>
+                </div>
+            </div>
+        </section>
+        <section id="downloads" class="tab-section">
+            <div class="card">
+                <h2>Downloads</h2>
+                <div class="download-list">
+                    <div class="download-item">
+                        <h3>TECHS SharePoint Site</h3>
+                        <p>Access our SharePoint site for all available documents.</p>
+                        <a href="https://kcpublicschools.sharepoint.com/sites/TECHS/Documents/Forms/AllItems.aspx" style="color:var(--primary);text-decoration:underline;">Go to SharePoint</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="tutorials" class="tab-section">
+            <div class="card">
+                <h2>Tutorials</h2>
+                <input type="search" class="search-bar" placeholder="Search tutorials...">
+                <div class="tutorial-list">
+                    <div class="tutorial-item">
+                        <h3>Apple Tutorials</h3>
+                        <p>Learn how to manage and maintain your Apple devices...</p>
+                        <a href="https://kcpublicschools.sharepoint.com/sites/TECHS/Documents/Forms/AllItems.aspx?id=%2Fsites%2FTECHS%2FDocuments%2F7%2E%20Training%20Guides%2FApple%20Devices&viewid=d3f241c2%2D1b63%2D458c%2Db5d3%2D6ea2944244f0" style="color:var(--primary);text-decoration:underline;">View Apple Tutorials</a>
+                    </div>
+                    <div class="tutorial-item">
+                        <h3>Windows Tutorials</h3>
+                        <p>Learn how to manage and maintain your Windows devices...</p>
+                        <a href="https://kcpublicschools.sharepoint.com/sites/TECHS/Documents/Forms/AllItems.aspx?id=%2Fsites%2FTECHS%2FDocuments%2F7%2E%20Training%20Guides%2FWindows&viewid=d3f241c2%2D1b63%2D458c%2Db5d3%2D6ea2944244f0" style="color:var(--primary);text-decoration:underline;">View Windows Tutorials</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        function showTab(event, tabId) {
+            event.preventDefault();
+            document.querySelectorAll('.tab-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+        function filterTeamMembers(query) {
+            const teamMembers = document.querySelectorAll('.team-member');
+            query = query.toLowerCase();
+            teamMembers.forEach(member => {
+                const name = member.querySelector('h3').textContent.toLowerCase();
+                const email = member.querySelector('a').textContent.toLowerCase();
+                if (name.includes(query) || email.includes(query)) {
+                    member.style.display = '';
+                } else {
+                    member.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
