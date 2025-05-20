@@ -124,28 +124,40 @@
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2rem;
         }
-        .news-item, .team-member, .download-item, .tutorial-item {
+        .news-item {
             background: var(--glass);
             border-radius: 14px;
             border: var(--border);
             padding: 1.5rem;
             box-shadow: 0 2px 12px #0ff1ce22;
-            transition: background 0.2s, transform 0.2s;
+            transition: background 0.2s;
             color: var(--text);
         }
-        .news-item:hover, .team-member:hover, .download-item:hover, .tutorial-item:hover {
-            background: #0ff1ce22;
-            /* Remove transform to prevent bounce */
-        }
-        .news-item h3 a {
-            color: var(--primary);
-            text-decoration: none;
+        .news-item h3 {
             font-family: 'Orbitron', Arial, sans-serif;
             font-size: 1.2rem;
-            transition: color 0.2s;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+        .news-item h3 a {
+            color: var(--primary) !important;
+            text-decoration: none !important;
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            border-bottom: none !important;
         }
         .news-item h3 a:hover {
-            color: #fff;
+            text-decoration: none !important;
+            border-bottom: none !important;
+        }
+        .news-item:hover {
+            background: #0ff1ce22;
+        }
+        .news-item:hover h3 a {
+            color: #fff !important;
             text-shadow: 0 2px 8px #0ff1ce99;
         }
         .search-bar {
@@ -175,6 +187,61 @@
             .sidebar { display: none; }
             .main-content { margin-left: 0; width: 100vw; padding: 1rem 0.2rem; }
         }
+        .no-underline {
+            text-decoration: none !important;
+            border-bottom: none !important;
+            color: var(--primary) !important;
+            font-family: 'Orbitron', Arial, sans-serif !important;
+            font-size: 1.2rem !important;
+            font-weight: 500 !important;
+        }
+        .no-underline:hover {
+            text-decoration: none !important;
+            border-bottom: none !important;
+            color: #fff !important;
+            text-shadow: 0 2px 8px #0ff1ce99 !important;
+        }
+        /* Specific style for Downloads button */
+        .news-item h3 a[href="#downloads"] {
+            color: var(--primary) !important;
+            text-decoration: none !important;
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-block;
+            border-bottom: none !important;
+        }
+        .team-member {
+            background: var(--glass);
+            border-radius: 14px;
+            border: var(--border);
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px #0ff1ce22;
+            transition: background 0.2s;
+            color: var(--text);
+        }
+        .team-member h3 {
+            color: var(--primary);
+            font-family: 'Orbitron', Arial, sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .team-member p {
+            margin: 0.5rem 0;
+        }
+        .team-member a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .team-member:hover {
+            background: #0ff1ce22;
+        }
+        .team-member:hover a {
+            color: #fff;
+            text-shadow: 0 2px 8px #0ff1ce99;
+        }
     </style>
 </head>
 <body>
@@ -199,15 +266,15 @@
                     <h3><a href="#news" onclick="showTab(event, 'news')">Latest News</a></h3>
                     <p>Check out the latest updates and news from the IT Department.</p>
                 </div>
-                <div class="download-item">
-                    <h3><a href="#downloads" onclick="showTab(event, 'downloads')">Downloads</a></h3>
+                <div class="news-item">
+                    <h3><a href="#downloads" onclick="showTab(event, 'downloads')" style="color: var(--primary) !important; text-decoration: none !important; border-bottom: none !important; font-family: 'Orbitron', Arial, sans-serif !important; font-size: 1.2rem !important; font-weight: 500 !important;">Downloads</a></h3>
                     <p>Access our SharePoint site for all available documents.</p>
                 </div>
-                <div class="tutorial-item">
+                <div class="news-item">
                     <h3><a href="#tutorials" onclick="showTab(event, 'tutorials')">Tutorials</a></h3>
                     <p>Learn how to manage and maintain your devices with our tutorials.</p>
                 </div>
-                <div class="team-member">
+                <div class="news-item">
                     <h3><a href="#information" onclick="showTab(event, 'information')">Information</a></h3>
                     <p>Meet the IT Department team and find contact information.</p>
                 </div>
@@ -228,57 +295,320 @@
         <section id="information" class="tab-section">
             <div class="card">
                 <h2>IT Department Team</h2>
-                <input type="search" class="search-bar" placeholder="Search by name or email..." oninput="filterTeamMembers(this.value)">
+                <div class="filter-container" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <input type="search" class="search-bar" placeholder="Search by name or email..." oninput="filterTeamMembers(this.value)">
+                    <select class="search-bar" onchange="filterByTeam(this.value)" style="width: auto;">
+                        <option value="">All Teams</option>
+                        <option value="Leadership">Leadership</option>
+                        <option value="Systems">Systems</option>
+                        <option value="Network">Network</option>
+                        <option value="Building Tech">Building Tech</option>
+                        <option value="Service Desk">Service Desk</option>
+                        <option value="Ed Tech">Ed Tech</option>
+                        <option value="AV">AV</option>
+                        <option value="Cyber Security">Cyber Security</option>
+                        <option value="Security">Security</option>
+                        <option value="Enterprise">Enterprise</option>
+                        <option value="Project Management">Project Management</option>
+                        <option value="Logistics">Logistics</option>
+                        <option value="Purchasing">Purchasing</option>
+                    </select>
+                </div>
                 <div class="team-list" id="teamGrid">
-                    <div class="team-member"><h3>Scott Jones</h3><p>CHIEF TECHNOLOGY OFFICER</p><p><a href="mailto:sjones@kcpublicschools.org">sjones@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Anthony Roberts</h3><p>ASST DIR OF TECHNOLOGY \ ENTERPRISE OPS</p><p><a href="mailto:aroberts@kcpublicschools.org">aroberts@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Jeff Hearrell</h3><p>ASST DIR OF TECHNOLOGY \ ENTERPRISE OPS</p><p><a href="mailto:jhearrell@kcpublicschools.org">jhearrell@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Cindy Jackson</h3><p>TECHNOLOGY SUPPORT MANAGER</p><p><a href="mailto:cjackson@kcpublicschools.org">cjackson@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Renae Carter</h3><p>EDUCATIONAL TECHNOLOGY OPERATIONS MGR</p><p><a href="mailto:rcarter@kcpublicschools.org">rcarter@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Melinda Shoemaker</h3><p>ASST DIRECTOR OF EDUCATIONAL TECHNOLOGY</p><p><a href="mailto:mshoemaker@kcpublicschools.org">mshoemaker@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Jeff Keltner</h3><p>SYSTEMS ENGINEER II</p><p><a href="mailto:jkeltner@kcpublicschools.org">jkeltner@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Chidi Nwachukwu</h3><p>NETWORK ENGINEER II</p><p><a href="mailto:cnwachuk@kcpublicschools.org">cnwachuk@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>John Solomon</h3><p>NETWORK ENGINEER II</p><p><a href="mailto:jsolomon@kcpublicschools.org">jsolomon@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Jayden Brooks</h3><p>SYSTEMS ENGINEER I</p><p><a href="mailto:jbrooks2@kcpublicschools.org">jbrooks2@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Travis Willis</h3><p>INFORMATION SECURITY ANALYST</p><p><a href="mailto:twillis@kcpublicschools.org">twillis@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Nathaniel Jones</h3><p>SECURITY ENGINEER</p><p><a href="mailto:njones2@kcpublicschools.org">njones2@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Marlon Andrews</h3><p>DISTRICT INTEGRATED SECURITY SYS MGR</p><p><a href="mailto:mandrews@kcpublicschools.org">mandrews@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Christopher Singleton</h3><p>LEAD SYSTEMS ANALYST DEVELOPER</p><p><a href="mailto:csingleton2@kcpublicschools.org">csingleton2@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Connie Aiello</h3><p>LEAD TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:caiello@kcpublicschools.org">caiello@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Clinton Noland</h3><p>LEAD TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:cnoland2@kcpublicschools.org">cnoland2@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Kyle Babb</h3><p>LEAD AUDIO-VISUAL SPECIALIST</p><p><a href="mailto:kbabb@kcpublicschools.org">kbabb@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Victoria Bleyenberg</h3><p>AUDIO-VISUAL SPECIALIST</p><p><a href="mailto:vbleyenberg@kcpublicschools.org">vbleyenberg@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Janice McKinney</h3><p>MANAGER OF STUDENT INFORMATION SYSTEMS</p><p><a href="mailto:jmckinney@kcpublicschools.org">jmckinney@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Valencia Griswold</h3><p>ED TECH LOGISTICS MANAGER</p><p><a href="mailto:vgriswold@kcpublicschools.org">vgriswold@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Srenda Green</h3><p>PROJECT ASSISTANT</p><p><a href="mailto:sgreen@kcpublicschools.org">sgreen@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Tanya Ellis</h3><p>Educational Technology Ops Spec</p><p><a href="mailto:tellis@kcpublicschools.org">tellis@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Cody Linn</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:colinn@kcpublicschools.org">colinn@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Kevin Jones</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:kjones@kcpublicschools.org">kjones@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Michael Paul Jr.</h3><p>TECHNOLOGY SUPPORT SPECIALIST II</p><p><a href="mailto:mpaul@kcpublicschools.org">mpaul@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Yusef Yadullah</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:yyadullah@kcpublicschools.org">yyadullah@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Lake Hall</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:lhall@kcpublicschools.org">lhall@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Michael Presko</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:mpresko@kcpublicschools.org">mpresko@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Carla Crawford</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:ccrawford@kcpublicschools.org">ccrawford@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Bill Thornton</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:bthornton2@kcpublicschools.org">bthornton2@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Iraj Nomani</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:inomani1@kcpublicschools.org">inomani1@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Doug Mason</h3><p>ENTERPRISE OPERATIONS ANALYST</p><p><a href="mailto:dmason@kcpublicschools.org">dmason@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Dylan Lock</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:dlock@kcpublicschools.org">dlock@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Joseph Carter</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:jcarter2@kcpublicschools.org">jcarter2@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Evely Gonzalez Alvarez</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:egonzalezalvarez@kcpublicschools.org">egonzalezalvarez@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Anthony Bell NDS</h3><p>KCPS -Department of Technology</p><p><a href="mailto:abell3@kcpublicschools.org">abell3@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Adam Garcia</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:agarcia@kcpublicschools.org">agarcia@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Jirapat Kuengwong</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:jkuengwong@kcpublicschools.org">jkuengwong@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Dereje Tolossa</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:dtolossa@kcpublicschools.org">dtolossa@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Stephen Battle</h3><p>DAY CUSTODIAN FULL TIME</p><p><a href="mailto:rbattle@kcpublicschools.org">rbattle@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Wyatt Joseph</h3><p>ENTERPRISE APPLICATIONS ANALYST</p><p><a href="mailto:wjoseph@kcpublicschools.org">wjoseph@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Victoria Martinez</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:vmartinez@kcpublicschools.org">vmartinez@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Howard Chase</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:hchase1@kcpublicschools.org">hchase1@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Paul Truss</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:ptruss@kcpublicschools.org">ptruss@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Anthony Draper</h3><p>ENTERPRISE OPERATIONS ANALYST</p><p><a href="mailto:adraper@kcpublicschools.org">adraper@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Ricky Blount</h3><p>ENTERPRISE OPERATIONS ANALYST</p><p><a href="mailto:rblount@kcpublicschools.org">rblount@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Keenan Williams</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:kwilliams5@kcpublicschools.org">kwilliams5@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Mark Herrada</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:mherrada2@kcpublicschools.org">mherrada2@kcpublicschools.org</a></p></div>
-                    <div class="team-member"><h3>Julian Mobley</h3><p>TECHNOLOGY SUPPORT SPECIALIST</p><p><a href="mailto:jmobley@kcpublicschools.org">jmobley@kcpublicschools.org</a></p></div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Scott Jones</h3>
+                        <p>CHIEF TECHNOLOGY OFFICER</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:sjones@kcpublicschools.org">sjones@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Anthony Roberts</h3>
+                        <p>ASST DIR OF TECHNOLOGY \ ENTERPRISE OPS</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:aroberts@kcpublicschools.org">aroberts@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Jeff Hearrell</h3>
+                        <p>ASST DIR OF TECHNOLOGY \ ENTERPRISE OPS</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:jhearrell@kcpublicschools.org">jhearrell@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Cindy Jackson</h3>
+                        <p>TECHNOLOGY SUPPORT MANAGER</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:cjackson@kcpublicschools.org">cjackson@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Ed Tech">
+                        <h3>Renae Carter</h3>
+                        <p>EDUCATIONAL TECHNOLOGY OPERATIONS MGR</p>
+                        <p>Team: Ed Tech</p>
+                        <p><a href="mailto:rcarter@kcpublicschools.org">rcarter@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Melinda Shoemaker</h3>
+                        <p>ASST DIRECTOR OF EDUCATIONAL TECHNOLOGY</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:mshoemaker@kcpublicschools.org">mshoemaker@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Systems">
+                        <h3>Jeff Keltner</h3>
+                        <p>SYSTEMS ENGINEER II</p>
+                        <p>Team: Systems</p>
+                        <p><a href="mailto:jkeltner@kcpublicschools.org">jkeltner@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Network">
+                        <h3>Chidi Nwachukwu</h3>
+                        <p>NETWORK ENGINEER II</p>
+                        <p>Team: Network</p>
+                        <p><a href="mailto:cnwachuk@kcpublicschools.org">cnwachuk@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Network">
+                        <h3>John Solomon</h3>
+                        <p>NETWORK ENGINEER II</p>
+                        <p>Team: Network</p>
+                        <p><a href="mailto:jsolomon@kcpublicschools.org">jsolomon@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Systems">
+                        <h3>Jayden Brooks</h3>
+                        <p>SYSTEMS ENGINEER I</p>
+                        <p>Team: Systems</p>
+                        <p><a href="mailto:jbrooks2@kcpublicschools.org">jbrooks2@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Cyber Security">
+                        <h3>Travis Willis</h3>
+                        <p>INFORMATION SECURITY ANALYST</p>
+                        <p>Team: Cyber Security</p>
+                        <p><a href="mailto:twillis@kcpublicschools.org">twillis@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Cyber Security">
+                        <h3>Nathaniel Jones</h3>
+                        <p>SECURITY ENGINEER</p>
+                        <p>Team: Cyber Security</p>
+                        <p><a href="mailto:njones2@kcpublicschools.org">njones2@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Security">
+                        <h3>Marlon Andrews</h3>
+                        <p>DISTRICT INTEGRATED SECURITY SYS MGR</p>
+                        <p>Team: Security</p>
+                        <p><a href="mailto:mandrews@kcpublicschools.org">mandrews@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Enterprise">
+                        <h3>Christopher Singleton</h3>
+                        <p>LEAD SYSTEMS ANALYST DEVELOPER</p>
+                        <p>Team: Enterprise</p>
+                        <p><a href="mailto:csingleton2@kcpublicschools.org">csingleton2@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Connie Aiello</h3>
+                        <p>LEAD TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:caiello@kcpublicschools.org">caiello@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Clinton Noland</h3>
+                        <p>LEAD TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:cnoland2@kcpublicschools.org">cnoland2@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="AV">
+                        <h3>Kyle Babb</h3>
+                        <p>LEAD AUDIO-VISUAL SPECIALIST</p>
+                        <p>Team: AV</p>
+                        <p><a href="mailto:kbabb@kcpublicschools.org">kbabb@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="AV">
+                        <h3>Victoria Bleyenberg</h3>
+                        <p>AUDIO-VISUAL SPECIALIST</p>
+                        <p>Team: AV</p>
+                        <p><a href="mailto:vbleyenberg@kcpublicschools.org">vbleyenberg@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Ed Tech">
+                        <h3>Janice McKinney</h3>
+                        <p>MANAGER OF STUDENT INFORMATION SYSTEMS</p>
+                        <p>Team: Ed Tech</p>
+                        <p><a href="mailto:jmckinney@kcpublicschools.org">jmckinney@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Leadership">
+                        <h3>Valencia Griswold</h3>
+                        <p>ED TECH LOGISTICS MANAGER</p>
+                        <p>Team: Leadership</p>
+                        <p><a href="mailto:vgriswold@kcpublicschools.org">vgriswold@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Project Management">
+                        <h3>Srenda Green</h3>
+                        <p>PROJECT ASSISTANT</p>
+                        <p>Team: Project Management</p>
+                        <p><a href="mailto:sgreen@kcpublicschools.org">sgreen@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Purchasing">
+                        <h3>Tanya Ellis</h3>
+                        <p>Educational Technology Ops Spec</p>
+                        <p>Team: Purchasing</p>
+                        <p><a href="mailto:tellis@kcpublicschools.org">tellis@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Cody Linn</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:colinn@kcpublicschools.org">colinn@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Kevin Jones</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:kjones@kcpublicschools.org">kjones@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Michael Paul Jr.</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST II</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:mpaul@kcpublicschools.org">mpaul@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Yusef Yadullah</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:yyadullah@kcpublicschools.org">yyadullah@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Logistics">
+                        <h3>Lake Hall</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Logistics</p>
+                        <p><a href="mailto:lhall@kcpublicschools.org">lhall@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Service Desk">
+                        <h3>Michael Presko</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Service Desk</p>
+                        <p><a href="mailto:mpresko@kcpublicschools.org">mpresko@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Carla Crawford</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:ccrawford@kcpublicschools.org">ccrawford@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Bill Thornton</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:bthornton2@kcpublicschools.org">bthornton2@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Iraj Nomani</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:inomani1@kcpublicschools.org">inomani1@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Network">
+                        <h3>Doug Mason</h3>
+                        <p>ENTERPRISE OPERATIONS ANALYST</p>
+                        <p>Team: Network</p>
+                        <p><a href="mailto:dmason@kcpublicschools.org">dmason@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Dylan Lock</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:dlock@kcpublicschools.org">dlock@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Joseph Carter</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:jcarter2@kcpublicschools.org">jcarter2@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Project Management">
+                        <h3>Evely Gonzalez Alvarez</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Project Management</p>
+                        <p><a href="mailto:egonzalezalvarez@kcpublicschools.org">egonzalezalvarez@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Logistics">
+                        <h3>Anthony Bell NDS</h3>
+                        <p>KCPS -Department of Technology</p>
+                        <p>Team: Logistics</p>
+                        <p><a href="mailto:abell3@kcpublicschools.org">abell3@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Service Desk">
+                        <h3>Adam Garcia</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Service Desk</p>
+                        <p><a href="mailto:agarcia@kcpublicschools.org">agarcia@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Jirapat Kuengwong</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:jkuengwong@kcpublicschools.org">jkuengwong@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Dereje Tolossa</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:dtolossa@kcpublicschools.org">dtolossa@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Stephen Battle</h3>
+                        <p>DAY CUSTODIAN FULL TIME</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:rbattle@kcpublicschools.org">rbattle@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Enterprise">
+                        <h3>Wyatt Joseph</h3>
+                        <p>ENTERPRISE APPLICATIONS ANALYST</p>
+                        <p>Team: Enterprise</p>
+                        <p><a href="mailto:wjoseph@kcpublicschools.org">wjoseph@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Victoria Martinez</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:vmartinez@kcpublicschools.org">vmartinez@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Howard Chase</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:hchase1@kcpublicschools.org">hchase1@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Service Desk">
+                        <h3>Paul Truss</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Service Desk</p>
+                        <p><a href="mailto:ptruss@kcpublicschools.org">ptruss@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Enterprise">
+                        <h3>Anthony Draper</h3>
+                        <p>ENTERPRISE OPERATIONS ANALYST</p>
+                        <p>Team: Enterprise</p>
+                        <p><a href="mailto:adraper@kcpublicschools.org">adraper@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Enterprise">
+                        <h3>Ricky Blount</h3>
+                        <p>ENTERPRISE OPERATIONS ANALYST</p>
+                        <p>Team: Enterprise</p>
+                        <p><a href="mailto:rblount@kcpublicschools.org">rblount@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Logistics">
+                        <h3>Keenan Williams</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Logistics</p>
+                        <p><a href="mailto:kwilliams5@kcpublicschools.org">kwilliams5@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Mark Herrada</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:mherrada2@kcpublicschools.org">mherrada2@kcpublicschools.org</a></p>
+                    </div>
+                    <div class="team-member" data-team="Building Tech">
+                        <h3>Julian Mobley</h3>
+                        <p>TECHNOLOGY SUPPORT SPECIALIST</p>
+                        <p>Team: Building Tech</p>
+                        <p><a href="mailto:jmobley@kcpublicschools.org">jmobley@kcpublicschools.org</a></p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -327,16 +657,24 @@
         }
         function filterTeamMembers(query) {
             const teamMembers = document.querySelectorAll('.team-member');
+            const selectedTeam = document.querySelector('select').value;
             query = query.toLowerCase();
+            
             teamMembers.forEach(member => {
                 const name = member.querySelector('h3').textContent.toLowerCase();
                 const email = member.querySelector('a').textContent.toLowerCase();
-                if (name.includes(query) || email.includes(query)) {
-                    member.style.display = '';
-                } else {
-                    member.style.display = 'none';
-                }
+                const team = member.getAttribute('data-team');
+                
+                const matchesSearch = name.includes(query) || email.includes(query);
+                const matchesTeam = !selectedTeam || team === selectedTeam;
+                
+                member.style.display = matchesSearch && matchesTeam ? '' : 'none';
             });
+        }
+
+        function filterByTeam(team) {
+            const searchQuery = document.querySelector('input[type="search"]').value;
+            filterTeamMembers(searchQuery);
         }
     </script>
 </body>
