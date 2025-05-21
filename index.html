@@ -927,6 +927,21 @@
         async function loadDiscussions() {
             try {
                 console.log('Attempting to load discussions...');
+                console.log('Repository:', `${REPO_OWNER}/${REPO_NAME}`);
+                
+                // First, verify repository access
+                const repoResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+                    method: 'GET',
+                    headers: getGitHubHeaders()
+                });
+                
+                if (!repoResponse.ok) {
+                    const errorData = await repoResponse.json();
+                    console.error('Repository access error:', errorData);
+                    throw new Error(`Cannot access repository: ${errorData.message}`);
+                }
+                
+                console.log('Repository access verified, loading issues...');
                 const headers = getGitHubHeaders();
                 console.log('Using headers:', headers);
                 
