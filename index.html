@@ -826,19 +826,32 @@
         const REPO_NAME = 'IT-Department';
 
         // Store the token directly
-        const GITHUB_TOKEN = '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';
+        const GITHUB_TOKEN = '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';
 
         // Simple function to get headers
         function getGitHubHeaders() {
             return {
-                'Authorization': `token ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json'
+                'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'X-GitHub-Api-Version': '2022-11-28'
             };
         }
 
         async function loadDiscussions() {
             try {
                 console.log('Loading discussions...');
+                // First, verify the repository exists
+                const repoResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+                    headers: getGitHubHeaders()
+                });
+                
+                if (!repoResponse.ok) {
+                    const errorData = await repoResponse.json();
+                    console.error('Repository access error:', errorData);
+                    throw new Error(`Cannot access repository: ${errorData.message}`);
+                }
+
+                // Then load the issues
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     headers: getGitHubHeaders()
                 });
