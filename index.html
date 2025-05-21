@@ -1034,7 +1034,20 @@
                 link.classList.remove('active');
             });
             event.currentTarget.classList.add('active');
+            
+            // Save the active tab to localStorage
+            localStorage.setItem('activeTab', tabId);
         }
+
+        // Add this function to restore the active tab
+        function restoreActiveTab() {
+            const activeTab = localStorage.getItem('activeTab') || 'home';
+            const tabLink = document.querySelector(`.nav-link[href="#${activeTab}"]`);
+            if (tabLink) {
+                tabLink.click();
+            }
+        }
+
         function filterTeamMembers(query) {
             const teamMembers = document.querySelectorAll('.team-member');
             const selectedTeam = document.querySelector('select').value;
@@ -1066,34 +1079,6 @@
         let lastDiscussionCount = 0;
         let lastCommentCounts = {};
         let pollingInterval;
-
-        function updateUserInterface(account) {
-            const userProfile = document.getElementById('user-profile');
-            const userNameDisplay = document.getElementById('user-name-display');
-            const userMenu = document.getElementById('user-menu');
-            
-            if (account) {
-                // User is signed in
-                currentUser = account;
-                userNameDisplay.textContent = `👤 ${account.name}`;
-                userProfile.style.display = 'block';
-                
-                // Update menu items
-                userMenu.innerHTML = `
-                    <button onclick="logout()">Sign Out</button>
-                `;
-            } else {
-                // User is not signed in
-                currentUser = null;
-                userNameDisplay.textContent = 'Not signed in';
-                userProfile.style.display = 'block';
-                
-                // Update menu items
-                userMenu.innerHTML = `
-                    <button onclick="login()">Sign In</button>
-                `;
-            }
-        }
 
         function startPolling() {
             // Check every 30 seconds
@@ -1306,6 +1291,8 @@
             } else {
                 updateUserInterface(null);
             }
+            // Restore the active tab
+            restoreActiveTab();
         });
 
         // Stop polling when the page is hidden
