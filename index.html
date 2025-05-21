@@ -912,12 +912,6 @@
 
         // Update the postComment function to use the authenticated user
         async function postComment(issueNumber) {
-            if (!currentUser) {
-                alert('Please sign in before posting a comment');
-                login();
-                return;
-            }
-
             const commentInput = document.getElementById(`comment-input-${issueNumber}`);
             const commentText = commentInput.value.trim();
             
@@ -935,7 +929,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        body: `**${currentUser.name}**: ${commentText}`
+                        body: commentText
                     })
                 });
                 
@@ -962,22 +956,11 @@
         }
 
         function createNewDiscussion() {
-            if (!currentUser) {
-                alert('Please sign in before creating a discussion');
-                login();
-                return;
-            }
             document.getElementById('new-discussion-modal').classList.add('show');
         }
 
         async function submitNewDiscussion(event) {
             event.preventDefault();
-            
-            if (!currentUser) {
-                alert('Please sign in before creating a discussion');
-                login();
-                return;
-            }
             
             const title = document.getElementById('discussion-title').value.trim();
             const body = document.getElementById('discussion-body').value.trim();
@@ -997,7 +980,7 @@
                     },
                     body: JSON.stringify({
                         title: title,
-                        body: `**Posted by ${currentUser.name}**\n\n${body}`
+                        body: body
                     })
                 });
                 
@@ -1226,18 +1209,13 @@
                 }
                 
                 commentsList.innerHTML = comments.map(comment => {
-                    // Extract name from comment if it's in our format
-                    const nameMatch = comment.body.match(/\*\*(.*?)\*\*:/);
-                    const displayName = nameMatch ? nameMatch[1] : comment.user.login;
-                    const commentText = nameMatch ? comment.body.replace(/\*\*.*?\*\*:\s*/, '') : comment.body;
-                    
                     return `
                         <div class="comment" style="background: var(--card-bg); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; width: 100%; box-sizing: border-box;">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                                <strong style="color: var(--primary);">${displayName}</strong>
+                                <strong style="color: var(--primary);">${comment.user.login}</strong>
                                 <span style="color: var(--text); font-size: 0.9rem;">${new Date(comment.created_at).toLocaleDateString()}</span>
                             </div>
-                            <p style="margin: 0;">${commentText}</p>
+                            <p style="margin: 0;">${comment.body}</p>
                         </div>
                     `;
                 }).join('');
