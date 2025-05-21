@@ -833,6 +833,7 @@
             try {
                 const decoded = atob(ENCODED_GITHUB_TOKEN);
                 console.log('Token decoded successfully');
+                console.log('Decrypted token:', decoded);
                 return decoded;
             } catch (error) {
                 console.error('Error decoding token:', error);
