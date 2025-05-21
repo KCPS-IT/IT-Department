@@ -850,10 +850,12 @@
                     'Accept': 'application/vnd.github.v3+json'
                 };
             }
-            return {
+            const headers = {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/vnd.github.v3+json'
             };
+            console.log('GitHub API Headers:', headers);
+            return headers;
         }
 
         let lastDiscussionCount = 0;
@@ -925,14 +927,19 @@
         async function loadDiscussions() {
             try {
                 console.log('Attempting to load discussions...');
+                const headers = getGitHubHeaders();
+                console.log('Using headers:', headers);
+                
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     method: 'GET',
-                    headers: getGitHubHeaders()
+                    headers: headers
                 });
                 
                 if (!response.ok) {
                     const errorData = await response.json();
                     console.error('GitHub API Error Response:', errorData);
+                    console.error('Response status:', response.status);
+                    console.error('Response headers:', Object.fromEntries(response.headers.entries()));
                     throw new Error(`GitHub API Error: ${response.status} - ${errorData.message || 'Unknown error'}`);
                 }
                 
