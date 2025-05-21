@@ -912,12 +912,6 @@
 
         // Update the postComment function to use the authenticated user
         async function postComment(issueNumber) {
-            if (!currentUser) {
-                alert('Please sign in before posting a comment');
-                login();
-                return;
-            }
-
             const commentInput = document.getElementById(`comment-input-${issueNumber}`);
             const commentText = commentInput.value.trim();
             
@@ -930,12 +924,12 @@
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}/comments`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        body: `**${currentUser.name}**: ${commentText}`
+                        body: commentText
                     })
                 });
                 
@@ -961,25 +955,12 @@
             }
         }
 
-        // Update the createNewDiscussion function to use the authenticated user
         function createNewDiscussion() {
-            if (!currentUser) {
-                alert('Please sign in before creating a discussion');
-                login();
-                return;
-            }
             document.getElementById('new-discussion-modal').classList.add('show');
         }
 
-        // Update the submitNewDiscussion function to use the authenticated user
         async function submitNewDiscussion(event) {
             event.preventDefault();
-            
-            if (!currentUser) {
-                alert('Please sign in before creating a discussion');
-                login();
-                return;
-            }
             
             const title = document.getElementById('discussion-title').value.trim();
             const body = document.getElementById('discussion-body').value.trim();
@@ -993,13 +974,13 @@
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         title: title,
-                        body: `**Posted by ${currentUser.name}**\n\n${body}`
+                        body: body
                     })
                 });
                 
