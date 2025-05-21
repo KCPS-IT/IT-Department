@@ -821,17 +821,36 @@
         </section>
     </main>
     <script>
+        // GitHub Discussions API functions
+        const REPO_OWNER = 'KCPS-IT';
+        const REPO_NAME = 'IT-Department';
+
         // Store the base64-encoded token
         const ENCODED_GITHUB_TOKEN = "Z2l0aHViX3BhdF8xMUJTV0hDNllHS0hLdmFtTm56Y0tMOF9ZRzVHRGxEaDl3UnNSUThqaDNWc2k2WHZSNmh5Q2hYRFMwc2NWM0Q3S1ZmS0pSSlJZRjN3QkVaQlY3WA==";
+
         // Decode when needed
         function getGitHubToken() {
-            return atob(ENCODED_GITHUB_TOKEN);
+            try {
+                const decoded = atob(ENCODED_GITHUB_TOKEN);
+                console.log('Token decoded successfully');
+                return decoded;
+            } catch (error) {
+                console.error('Error decoding token:', error);
+                return null;
+            }
         }
 
         // Common headers for GitHub API calls
         function getGitHubHeaders() {
+            const token = getGitHubToken();
+            if (!token) {
+                console.error('Failed to decode GitHub token');
+                return {
+                    'Accept': 'application/vnd.github.v3+json'
+                };
+            }
             return {
-                'Authorization': `Bearer ${getGitHubToken()}`,
+                'Authorization': `Bearer ${token}`,
                 'Accept': 'application/vnd.github.v3+json'
             };
         }
@@ -1163,10 +1182,6 @@
             const searchQuery = document.querySelector('input[type="search"]').value;
             filterTeamMembers(searchQuery);
         }
-
-        // GitHub Discussions API functions
-        const REPO_OWNER = 'KCPS-IT';
-        const REPO_NAME = 'IT-Department';
     </script>
 </body>
 </html>
