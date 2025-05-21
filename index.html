@@ -925,7 +925,8 @@
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}/comments`, {
                     method: 'POST',
                     headers: {
-                        ...GITHUB_HEADERS,
+                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -976,7 +977,8 @@
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     method: 'POST',
                     headers: {
-                        ...GITHUB_HEADERS,
+                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -1054,13 +1056,13 @@
         }
 
         // GitHub Discussions API functions
-        const GITHUB_TOKEN = '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';
+        const GITHUB_TOKEN = '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';
         const REPO_OWNER = 'KCPS-IT';
         const REPO_NAME = 'IT-Department';
 
         // Common headers for GitHub API calls
         const GITHUB_HEADERS = {
-            'Authorization': `token ${GITHUB_TOKEN}`,
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
             'Accept': 'application/vnd.github.v3+json',
             'X-GitHub-Api-Version': '2022-11-28'
         };
