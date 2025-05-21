@@ -385,11 +385,8 @@
     </style>
 </head>
 <body>
-    <div id="user-profile" class="user-profile" onclick="toggleUserMenu()">
-        <span id="user-name-display">Not signed in</span>
-        <div id="user-menu" class="user-profile-menu">
-            <button onclick="login()">Sign In</button>
-        </div>
+    <div id="user-profile" class="user-profile">
+        <span id="user-name-display">Discussion Board</span>
     </div>
 
     <div id="new-content-indicator" class="new-content-indicator" onclick="refreshContent()">
@@ -823,130 +820,10 @@
             </div>
         </section>
     </main>
-    <script src="https://alcdn.msauth.net/browser/2.30.0/js/msal-browser.min.js"></script>
     <script>
-        // MSAL Configuration
-        const msalConfig = {
-            auth: {
-                clientId: "7aa145f5-62e9-458c-ad3a-12ff059d4f19",
-                authority: "https://login.microsoftonline.com/139fe691-d724-4472-abdd-1f3073484955",
-                redirectUri: "https://kcps-it.github.io/IT-Department",
-                postLogoutRedirectUri: "https://kcps-it.github.io/IT-Department"
-            },
-            cache: {
-                cacheLocation: "sessionStorage",
-                storeAuthStateInCookie: false
-            }
-        };
-
-        const msalInstance = new msal.PublicClientApplication(msalConfig);
-
-        // Login request configuration
-        const loginRequest = {
-            scopes: ["openid", "profile", "email"] // These scopes will get us the ID token
-        };
-
-        // Handle redirect promise
-        msalInstance.handleRedirectPromise().then(handleResponse).catch(err => {
-            console.error("Error handling redirect:", err);
-        });
-
-        function handleResponse(response) {
-            if (response) {
-                // User is signed in
-                try {
-                    // Get GitHub token from roles claim
-                    const roles = response.idTokenClaims.roles || [];
-                    const githubToken = roles.find(role => role.startsWith('github_pat_'));
-                    console.log('ID Token Claims:', response.idTokenClaims); // Debug log
-                    if (githubToken) {
-                        localStorage.setItem('github_token', githubToken);
-                    }
-                    updateUserInterface(response.account);
-                } catch (error) {
-                    console.error('Error getting GitHub token:', error);
-                    updateUserInterface(null);
-                }
-            } else {
-                // Check if user is already signed in
-                const currentAccounts = msalInstance.getAllAccounts();
-                if (currentAccounts.length > 0) {
-                    try {
-                        // Get GitHub token from roles claim
-                        const roles = currentAccounts[0].idTokenClaims.roles || [];
-                        const githubToken = roles.find(role => role.startsWith('github_pat_'));
-                        console.log('ID Token Claims:', currentAccounts[0].idTokenClaims); // Debug log
-                        if (githubToken) {
-                            localStorage.setItem('github_token', githubToken);
-                        }
-                        updateUserInterface(currentAccounts[0]);
-                    } catch (error) {
-                        console.error('Error getting GitHub token:', error);
-                        updateUserInterface(null);
-                    }
-                } else {
-                    updateUserInterface(null);
-                }
-            }
-        }
-
-        function updateUserInterface(account) {
-            const userProfile = document.getElementById('user-profile');
-            const userNameDisplay = document.getElementById('user-name-display');
-            const userMenu = document.getElementById('user-menu');
-            
-            if (account) {
-                // User is signed in
-                currentUser = account;
-                userNameDisplay.textContent = `👤 ${account.name}`;
-                userProfile.style.display = 'block';
-                
-                // Update menu items
-                userMenu.innerHTML = `
-                    <button onclick="logout()">Sign Out</button>
-                `;
-
-                // Load discussions after successful login
-                loadDiscussions();
-            } else {
-                // User is not signed in
-                currentUser = null;
-                userNameDisplay.textContent = 'Not signed in';
-                userProfile.style.display = 'block';
-                
-                // Update menu items
-                userMenu.innerHTML = `
-                    <button onclick="login()">Sign In</button>
-                `;
-            }
-        }
-
-        async function login() {
-            try {
-                await msalInstance.loginRedirect(loginRequest);
-            } catch (error) {
-                console.error("Error during login:", error);
-            }
-        }
-
-        async function logout() {
-            try {
-                // Clear GitHub token on logout
-                localStorage.removeItem('github_token');
-                await msalInstance.logoutRedirect();
-            } catch (error) {
-                console.error("Error during logout:", error);
-            }
-        }
-
-        // Function to get the token from localStorage
-        function getGitHubToken() {
-            const token = localStorage.getItem('github_token');
-            if (!token) {
-                throw new Error('Please sign in to access discussions');
-            }
-            return token;
-        }
+        // GitHub Discussions API functions
+        const REPO_OWNER = 'KCPS-IT';
+        const REPO_NAME = 'IT-Department';
 
         // Store GitHub token in a more secure way
         const GITHUB_TOKEN = atob('Z2l0aHViX3BhdF8xMUJTV0hDNlkwY0gyMWVLdGVudkFMX21tYVc2cmtDUkJqaWtLRFpNNVNwWVBLOFhkdE9JRFVwcWlIQXFRSkY2ZTRMVE1IRk9EdjlVTUN6cDA='); // Base64 encoded token
@@ -959,7 +836,6 @@
             };
         }
 
-        let currentUser = null;
         let lastDiscussionCount = 0;
         let lastCommentCounts = {};
         let pollingInterval;
@@ -1224,36 +1100,10 @@
             document.getElementById('discussion-body').value = '';
         }
 
-        // Add this function to handle the user profile click
-        function toggleUserMenu(event) {
-            event.stopPropagation(); // Prevent the click from bubbling up
-            const menu = document.getElementById('user-menu');
-            menu.classList.toggle('show');
-        }
-
-        // Update the user profile click handler
-        document.getElementById('user-profile').addEventListener('click', toggleUserMenu);
-
-        // Close the menu when clicking outside
-        document.addEventListener('click', (event) => {
-            const userProfile = document.getElementById('user-profile');
-            const userMenu = document.getElementById('user-menu');
-            if (!userProfile.contains(event.target)) {
-                userMenu.classList.remove('show');
-            }
-        });
-
         // Start polling when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             loadDiscussions();
             startPolling();
-            // Check if user is already signed in
-            const currentAccounts = msalInstance.getAllAccounts();
-            if (currentAccounts.length > 0) {
-                updateUserInterface(currentAccounts[0]);
-            } else {
-                updateUserInterface(null);
-            }
             // Restore the active tab
             restoreActiveTab();
         });
@@ -1313,10 +1163,6 @@
             const searchQuery = document.querySelector('input[type="search"]').value;
             filterTeamMembers(searchQuery);
         }
-
-        // GitHub Discussions API functions
-        const REPO_OWNER = 'KCPS-IT';
-        const REPO_NAME = 'IT-Department';
     </script>
 </body>
 </html>
