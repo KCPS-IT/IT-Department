@@ -921,11 +921,11 @@
             }
             
             try {
+                console.log('Attempting to post comment...');
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}/comments`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json',
+                        ...GITHUB_HEADERS,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -935,6 +935,7 @@
                 
                 if (!response.ok) {
                     const errorData = await response.json();
+                    console.error('GitHub API Error Response:', errorData);
                     throw new Error(`Failed to post comment: ${response.status} - ${errorData.message}`);
                 }
                 
@@ -971,11 +972,11 @@
             }
             
             try {
+                console.log('Attempting to create new discussion...');
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json',
+                        ...GITHUB_HEADERS,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -986,6 +987,7 @@
                 
                 if (!response.ok) {
                     const errorData = await response.json();
+                    console.error('GitHub API Error Response:', errorData);
                     throw new Error(`Failed to create discussion: ${response.status} - ${errorData.message}`);
                 }
                 
@@ -1058,7 +1060,7 @@
 
         // Common headers for GitHub API calls
         const GITHUB_HEADERS = {
-            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Authorization': `token ${GITHUB_TOKEN}`,
             'Accept': 'application/vnd.github.v3+json',
             'X-GitHub-Api-Version': '2022-11-28'
         };
@@ -1132,17 +1134,20 @@
 
         async function loadDiscussions() {
             try {
+                console.log('Attempting to load discussions...');
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
+                    method: 'GET',
                     headers: GITHUB_HEADERS
                 });
                 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error('GitHub API Error:', errorData);
+                    console.error('GitHub API Error Response:', errorData);
                     throw new Error(`GitHub API Error: ${response.status} - ${errorData.message || 'Unknown error'}`);
                 }
                 
                 const issues = await response.json();
+                console.log('Successfully loaded discussions:', issues);
                 displayDiscussions(issues);
             } catch (error) {
                 console.error('Error loading discussions:', error);
@@ -1184,17 +1189,20 @@
 
         async function loadComments(issueNumber) {
             try {
+                console.log('Attempting to load comments...');
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}/comments?per_page=100`, {
+                    method: 'GET',
                     headers: GITHUB_HEADERS
                 });
                 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error('GitHub API Error:', errorData);
+                    console.error('GitHub API Error Response:', errorData);
                     throw new Error(`GitHub API Error: ${response.status} - ${errorData.message || 'Unknown error'}`);
                 }
                 
                 const comments = await response.json();
+                console.log('Successfully loaded comments:', comments);
                 const commentsList = document.getElementById(`comments-list-${issueNumber}`);
                 
                 if (comments.length === 0) {
