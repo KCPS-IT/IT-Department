@@ -825,8 +825,8 @@
         const REPO_OWNER = 'KCPS-IT';
         const REPO_NAME = 'IT-Department';
 
-        // Store GitHub token in a more secure way
-        const GITHUB_TOKEN = atob('Z2l0aHViX3BhdF8xMUJTV0hDNlkwY0gyMWVLdGVudkFMX21tYVc2cmtDUkJqaWtLRFpNNVNwWVBLOFhkdE9JRFVwcWlIQXFRSkY2ZTRMVE1IRk9EdjlVTUN6cDA='); // Base64 encoded token
+        // Store GitHub token directly (it's already a personal access token)
+        const GITHUB_TOKEN = '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';
 
         // Common headers for GitHub API calls
         function getGitHubHeaders() {
