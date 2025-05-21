@@ -826,14 +826,13 @@
         const REPO_NAME = 'IT-Department';
 
         // Store the token directly
-        const GITHUB_TOKEN = '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';
+        const GITHUB_TOKEN = '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';
 
         // Simple function to get headers
         function getGitHubHeaders() {
             return {
-                'Authorization': `Bearer ${GITHUB_TOKEN}`,
-                'Accept': 'application/vnd.github.v3+json',
-                'X-GitHub-Api-Version': '2022-11-28'
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
             };
         }
 
