@@ -873,6 +873,7 @@
             
             if (account) {
                 // User is signed in
+                currentUser = account;
                 userNameDisplay.textContent = `👤 ${account.name}`;
                 userProfile.style.display = 'block';
                 
@@ -880,14 +881,9 @@
                 userMenu.innerHTML = `
                     <button onclick="logout()">Sign Out</button>
                 `;
-                
-                // Hide name input section if it exists
-                const nameSection = document.getElementById('user-name-section');
-                if (nameSection) {
-                    nameSection.style.display = 'none';
-                }
             } else {
                 // User is not signed in
+                currentUser = null;
                 userNameDisplay.textContent = 'Not signed in';
                 userProfile.style.display = 'block';
                 
@@ -916,8 +912,7 @@
 
         // Update the postComment function to use the authenticated user
         async function postComment(issueNumber) {
-            const account = msalInstance.getAllAccounts()[0];
-            if (!account) {
+            if (!currentUser) {
                 alert('Please sign in before posting a comment');
                 login();
                 return;
@@ -940,7 +935,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        body: `**${account.name}**: ${commentText}`
+                        body: `**${currentUser.name}**: ${commentText}`
                     })
                 });
                 
@@ -968,8 +963,7 @@
 
         // Update the createNewDiscussion function to use the authenticated user
         function createNewDiscussion() {
-            const account = msalInstance.getAllAccounts()[0];
-            if (!account) {
+            if (!currentUser) {
                 alert('Please sign in before creating a discussion');
                 login();
                 return;
@@ -981,8 +975,7 @@
         async function submitNewDiscussion(event) {
             event.preventDefault();
             
-            const account = msalInstance.getAllAccounts()[0];
-            if (!account) {
+            if (!currentUser) {
                 alert('Please sign in before creating a discussion');
                 login();
                 return;
@@ -1006,7 +999,7 @@
                     },
                     body: JSON.stringify({
                         title: title,
-                        body: `**Posted by ${account.name}**\n\n${body}`
+                        body: `**Posted by ${currentUser.name}**\n\n${body}`
                     })
                 });
                 
@@ -1069,9 +1062,38 @@
         const REPO_OWNER = 'KCPS-IT';
         const REPO_NAME = 'IT-Department';
 
+        let currentUser = null;
         let lastDiscussionCount = 0;
         let lastCommentCounts = {};
         let pollingInterval;
+
+        function updateUserInterface(account) {
+            const userProfile = document.getElementById('user-profile');
+            const userNameDisplay = document.getElementById('user-name-display');
+            const userMenu = document.getElementById('user-menu');
+            
+            if (account) {
+                // User is signed in
+                currentUser = account;
+                userNameDisplay.textContent = `👤 ${account.name}`;
+                userProfile.style.display = 'block';
+                
+                // Update menu items
+                userMenu.innerHTML = `
+                    <button onclick="logout()">Sign Out</button>
+                `;
+            } else {
+                // User is not signed in
+                currentUser = null;
+                userNameDisplay.textContent = 'Not signed in';
+                userProfile.style.display = 'block';
+                
+                // Update menu items
+                userMenu.innerHTML = `
+                    <button onclick="login()">Sign In</button>
+                `;
+            }
+        }
 
         function startPolling() {
             // Check every 30 seconds
