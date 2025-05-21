@@ -1065,9 +1065,9 @@
         }
 
         // GitHub Discussions API functions
-        const GITHUB_TOKEN = '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';
-        const REPO_OWNER = 'KCPS-IT'; // Updated to correct organization name
-        const REPO_NAME = 'IT-Department'; // Updated to correct repository name
+        const GITHUB_TOKEN = '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KUKU0Ib';
+        const REPO_OWNER = 'KCPS-IT';
+        const REPO_NAME = 'IT-Department';
 
         let lastDiscussionCount = 0;
         let lastCommentCounts = {};
@@ -1151,7 +1151,8 @@
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`Failed to load discussions: ${response.status}`);
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API Error: ${response.status} - ${errorData.message || 'Unknown error'}`);
                 }
                 
                 const issues = await response.json();
@@ -1159,8 +1160,16 @@
                 displayDiscussions(issues);
             } catch (error) {
                 console.error('Error loading discussions:', error);
-                document.getElementById('discussions-list').innerHTML = 
-                    '<p style="color: var(--primary);">Error loading discussions. Please try again.</p>';
+                document.getElementById('discussions-list').innerHTML = `
+                    <div style="background: var(--glass); border-radius: 14px; border: var(--border); padding: 1.5rem; margin-bottom: 2rem;">
+                        <h3 style="color: var(--primary); font-family: 'Orbitron', Arial, sans-serif; font-size: 1.2rem; margin-bottom: 0.5rem;">
+                            Error Loading Discussions
+                        </h3>
+                        <p style="color: var(--text);">There was an error loading the discussions. Please try again later.</p>
+                        <p style="color: var(--text); font-size: 0.9rem; margin-top: 1rem;">Error details: ${error.message}</p>
+                        <button onclick="loadDiscussions()" class="search-bar" style="width: auto; cursor: pointer; margin-top: 1rem;">Retry Loading Discussions</button>
+                    </div>
+                `;
             }
         }
 
@@ -1199,7 +1208,8 @@
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`Failed to load comments: ${response.status}`);
+                    const errorData = await response.json();
+                    throw new Error(`GitHub API Error: ${response.status} - ${errorData.message || 'Unknown error'}`);
                 }
                 
                 const comments = await response.json();
@@ -1228,8 +1238,13 @@
                 }).join('');
             } catch (error) {
                 console.error('Error loading comments:', error);
-                document.getElementById(`comments-list-${issueNumber}`).innerHTML = 
-                    '<p style="color: var(--primary);">Error loading comments. Please try again.</p>';
+                document.getElementById(`comments-list-${issueNumber}`).innerHTML = `
+                    <div style="background: var(--glass); border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                        <p style="color: var(--primary);">Error loading comments. Please try again.</p>
+                        <p style="color: var(--text); font-size: 0.9rem; margin-top: 0.5rem;">Error details: ${error.message}</p>
+                        <button onclick="loadComments(${issueNumber})" class="search-bar" style="width: auto; cursor: pointer; margin-top: 0.5rem;">Retry Loading Comments</button>
+                    </div>
+                `;
             }
         }
 
