@@ -924,7 +924,7 @@
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}/comments`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
@@ -974,7 +974,7 @@
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     method: 'POST',
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
@@ -1077,7 +1077,7 @@
                 // Check for new discussions
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json'
                     }
                 });
@@ -1098,7 +1098,7 @@
                 for (const issue of issues) {
                     const commentsResponse = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issue.number}/comments`, {
                         headers: {
-                            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                            'Authorization': `token ${GITHUB_TOKEN}`,
                             'Accept': 'application/vnd.github.v3+json'
                         }
                     });
@@ -1133,7 +1133,7 @@
             try {
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json'
                     }
                 });
@@ -1144,15 +1144,12 @@
                 }
                 
                 const issues = await response.json();
-                lastDiscussionCount = issues.length;
                 displayDiscussions(issues);
             } catch (error) {
                 console.error('Error loading discussions:', error);
                 document.getElementById('discussions-list').innerHTML = `
                     <div style="background: var(--glass); border-radius: 14px; border: var(--border); padding: 1.5rem; margin-bottom: 2rem;">
-                        <h3 style="color: var(--primary); font-family: 'Orbitron', Arial, sans-serif; font-size: 1.2rem; margin-bottom: 0.5rem;">
-                            Error Loading Discussions
-                        </h3>
+                        <h3 style="color: var(--primary);">Error Loading Discussions</h3>
                         <p style="color: var(--text);">There was an error loading the discussions. Please try again later.</p>
                         <p style="color: var(--text); font-size: 0.9rem; margin-top: 1rem;">Error details: ${error.message}</p>
                         <button onclick="loadDiscussions()" class="search-bar" style="width: auto; cursor: pointer; margin-top: 1rem;">Retry Loading Discussions</button>
@@ -1190,7 +1187,7 @@
             try {
                 const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues/${issueNumber}/comments?per_page=100`, {
                     headers: {
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json'
                     }
                 });
